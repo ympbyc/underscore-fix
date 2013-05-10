@@ -17,8 +17,8 @@ var naive = function (data) {
 
 //if we use underscore-fix
 
-var f = _.compose(_.flip_partial(_.join, ", "),
-                  _.flip_partial(_.map, function (x) {
-                    return _.pipe(_.pick(x, "fname", "lname", "address"),
-                                  _.values,
-                                  _.flip_partial(_.join, " ")); }));
+var f = _.compose(_.flippar(_.join, ", "),
+                  _.flippar(_.map, function (x) {
+                      return _.pipe(_.pick(x, "fname", "lname", "address"),
+                                    _.values,
+                                    _.flippar(_.join, " ")); }));

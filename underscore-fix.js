@@ -24,12 +24,13 @@ _.bin_multi = function (binary_f) {
 /* Sequence (Array, String, arguments, ...) */
 
 _.slice = _.optarg(1, function (arr, args) {
-    if (_.isString(arr)) return String.prototype.slice.apply(arr, args);
+    if (_.isFunction(arr.slice)) return arr.slice.apply(arr, args);
     return Array.prototype.slice.apply(arr, args);
 });
 
 _.concat = _.bin_multi(function (xs, ys) {
-    return xs.concat(ys);
+    if (_.isFunction(xs.concat)) return xs.concat(ys);
+    return Array.prototype.concat.apply(xs, ys);
 });
 
 _.len = function (a) {

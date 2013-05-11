@@ -85,7 +85,6 @@
 
     _.pipe = _.optarg(2, function (val, fn, fns) {
         if (_.isEmpty(fns)) return fn(val);
-        console.log(fns);
         return _.apply(_.pipe, _.concat([fn(val)], fns));
     });
 

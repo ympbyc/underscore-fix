@@ -151,6 +151,9 @@ _.flip(_['-'])(10, 5); //=> -5
 
 ```
 Function -> Function
+Function * a -> Function
+Function * a * b -> Function
+...
 ```
 
 flipとpartialをひとまとめにしたもの.
@@ -197,7 +200,7 @@ _.iff(1 < 5,
 Number * Function -> Function
 ```
 
-数値Nと関数Fを取り、関数Fへの引数のN番目以降を配列にしてFに渡す関数Gを返す。argumentsのスライシングを抽象化する。
+数値Nと関数Fを取り、関数Fへの引数のN+1番目以降を配列にしてFに渡す関数Gを返す。argumentsのスライシングを抽象化する。
 
 ```javascript
 var f = _.optarg(2, function (a, b, cs) {

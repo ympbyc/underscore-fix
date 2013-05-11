@@ -58,21 +58,48 @@ test("apply", function () {
         se(b, 2);
         se(c, 3);
     }, [1,2,3]);
+
+    _.apply(function () {
+        se(this.a, undefined, "context should be null");
+    }, []);
+
+    _.apply(function () {
+        se(this.a, 500, "should capture context");
+    }, [], {a: 500});
 });
 
 test("flip", function () {
     _.flip(function (a, b, c, d) {
         se(a, 2, "second -> first");
-        se(b, 1, "first -> first");
+        se(b, 1, "first -> second");
         se(c, 3, "third -> third");
         se(d, 4, "fourth -> fourth");
     })(1,2,3,4);
+
+    var o = {
+        x: 500,
+        foo: _.flip(function (a, b) {
+            return this.x;
+        })};
+
+    se(o.foo(1,2), 500, "should be able to be used as methods");
 });
 
 test("flippar", function () {
     se(_.flippar(function (a, b) {
         return a - b;
     }, 2)(3), 1, "should flip and partialy apply");
+
+    var o = {
+        x: 500,
+        foo: _.flippar(function (a, b) {
+            se(a, 2, "usual");
+            se(b, 1, "usual");
+            se(this.x, 500, "should be able to be used as methods");
+        }, 1)
+    };
+
+    o.foo(2);
 });
 
 test("pipe", function () {
@@ -96,6 +123,19 @@ test("optarg", function () {
         se(b, 2, "second arg");
         de(cs, [3,4,5], "should capture rest arg");
     })(1,2,3,4,5);
+
+    de(_.optarg(0, function (args) {
+        return args;
+    })(1,2,3), [1,2,3], "zero required args");
+
+    var o = {
+        x: 500,
+        f: _.optarg(0, function (args) {
+            de(args, [1,2,3], "usual");
+            se(this.x, 500, "should be able to be used as methods");
+        })};
+
+    o.f(1,2,3);
 });
 
 test("bin_multi", function () {

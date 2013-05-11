@@ -11,7 +11,7 @@
             var required = Array.prototype.slice.call(arguments, 0, n);
             var optional = Array.prototype.slice.call(arguments, n);
             required.push(optional);
-            return _.apply(f, required);
+            return _.apply(f, required, this);
         };
     };
 
@@ -68,13 +68,13 @@
     };
 
     /* Function */
-    _.apply = function (f, args) {
-        return f.apply(null, args);
+    _.apply = function (f, args, context) {
+        return f.apply(context ? context : null, args);
     };
 
     _.flip = function (f) {
         return _.optarg(2, function (x, y, zs) {
-            return _.apply(_.partial(f, y, x), zs);
+            return _.apply(_.partial(f, y, x), zs, this);
         });
     };
 

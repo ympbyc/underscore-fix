@@ -9,7 +9,6 @@ Sequence
 --------
 
 SequenceはStringやargumentsやArrayなど、lengthプロパティを持ったオブジェクト.
-型リテラルとして`[type]`を使う.
 
 ### _.slice ###
 
@@ -170,7 +169,7 @@ a * (a -> b) * (b -> c) -> c
 ...
 ```
 
-F#の`|>`, Clojureの->>
+F#の`|>`, Clojureの`->>`
 
 ```javascript
 _.pipe("hello, ",
@@ -259,7 +258,7 @@ toUpper("hello"); //=> "HELLO"
 Operator
 --------
 
-演算子は関数合成や部分適用のときに扱い辛いので関数を提供する. `a * a -> a`なもの(四則演算`Number * Number -> Number`)などに関しては全て多引数化してある.
+演算子は関数合成や部分適用のときに扱い辛いので関数を提供する. `a * a -> a`なもの(例えば四則演算`Number * Number -> Number`)に関しては全て多引数化してある.
 
 用意されている関数:
 

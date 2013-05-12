@@ -95,7 +95,7 @@
 
     /* String */
     //simple_template :: "" -> {"":""} -> ""
-    _.simple_template = function (tmpl, filler) {
+    _.simple_template = _.simplate = function (tmpl, filler) {
         return _.foldl(filler, function (tmpl, val, key) {
             return tmpl.replace(new RegExp("{{ *"+key+" *}}", "g"), val);
         }, tmpl);
@@ -145,13 +145,13 @@
         return ! a;
     };
 
-    _.eq = _.bin_multi(function (a, b) {
+    _.eq = function (a, b) {
         return a === b;
-    });
+    };
 
-    _.neq = _.bin_multi(function (a, b) {
+    _.neq = function (a, b) {
         return a !== b;
-    });
+    };
 
     _.lt = function (a, b) {
         return a < b;

@@ -90,6 +90,8 @@ test("flippar", function () {
         return a - b;
     }, 2)(3), 1, "should flip and partialy apply");
 
+    de(_.filter([1,2,0,4,1,3,1], _.flippar(_.gt, 2)), [4,3], "doublecheck");
+
     var o = {
         x: 500,
         foo: _.flippar(function (a, b) {
@@ -166,6 +168,8 @@ module("Operator");
 
 test("operator", function () {
     se(_["+"](1,2,3,4,5), 15, "should accept many args");
+
+    de(_.filter([1,2,0,4,1,3,1], _.partial(_.neq, 1)), [2,0,4,3], "should work beautifully when combined with higher order functions");
 
     se(_.at({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
 });

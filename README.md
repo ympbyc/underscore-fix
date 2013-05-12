@@ -123,10 +123,12 @@ Function
 ### _.apply ###
 
 ```
-Function a -> Array -> a
+Function a * [] -> a
+Function a * [] * {} -> a
 ```
 
 関数Fと配列Vを取り、`F.apply(null, V)`する.
+第三引数にコンテキストCが与えられた場合は、 `F.apply(C, V)`する.
 
 ```javascript
 _.apply(function (a, b, c) { return [a,b,c]; },
@@ -275,6 +277,7 @@ _.at
 ```javascript
 _["+"](1,2,3,4,5); //=> 15
 _.map([1,2,3,4], _.partial(_["*"], 2)); //=> [2,4,6,8]
+_.filter([1,2,0,4,1,3,1], _.flippar(_.gt, 2)); //=> [4,3]
 
 _.at({a: {b: {c: "xxx"}}}, "a", "b", "c"); //=> "xxx"
 ```

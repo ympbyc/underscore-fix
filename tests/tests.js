@@ -28,6 +28,11 @@ test("join", function () {
     se(_.join(["foo", "bar", "baz"], "**"), "foo**bar**baz", "ok");
 });
 
+test("splat", function () {
+    de(_.splat([1,2,3,4,5,6], 2), [[1,2], [3,4], [5,6]], "splat by two");
+    de(_.splat([1,2,3,4,5,6, 7], 3), [[1,2,3], [4,5,6], [7]], "splat by three. one");
+});
+
 /* Object  */
 module("Object");
 
@@ -47,6 +52,10 @@ test("mapmap", function () {
 test("json", function () {
     de(JSON.parse(_.json({a:1, b:[2, 3]})), {a:1, b:[2, 3]}, "should parse");
     de(_.json('{"a": 1, "b": [2, 3]}'), {a:1, b:[2, 3]}, "should stringify");
+});
+
+test("assoc", function () {
+    de(_.assoc({a: 1, b:2}, "c", 3, "d", 4), {a:1, b:2, c:3, d:4}, "associate");
 });
 
 /* Function */

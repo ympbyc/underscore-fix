@@ -35,14 +35,19 @@
         return Array.prototype.concat.apply(xs, ys);
     });
 
-    _.len = function (a) {
-        return a.length;
-    };
-
-    /* Array  */
+    //DEPRECATED
+    _.len = _.size;
 
     _.join = function (a,b) {
         return a.join(b);
+    };
+
+    _.splat = function (xs, n) {
+        var ys = [],
+            i = 0, l = _.size(xs);
+        for (; i < l; i += n)
+            ys.push(_.slice(xs, i, i + n));
+        return ys;
     };
 
     /* Object */
@@ -66,6 +71,10 @@
         if (_.isString(x)) return JSON.parse(x);
         return JSON.stringify(x);
     };
+
+    _.assoc = _.optarg(1, function (o, kvs) {
+        return _.merge(o, _.object(_.splat(kvs, 2)));
+    });
 
     /* Function */
     _.apply = function (f, args, context) {
@@ -172,5 +181,6 @@
     _.at = _.bin_multi(function (a, b) {
         return a[b];
     });
+
 
 }(_));

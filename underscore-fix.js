@@ -23,24 +23,52 @@
         });
     };
 
+    _.native_absent = function (method, f) {
+        return _.optarg(1, function (obj, args) {
+            if (_.isFunction(obj[method]))
+                return _.apply(obj[method], args, obj);
+            return _.apply(_.partial(f, obj), args);
+        });
+    };
+
+    /* Collection */
+    /* Collection is what implements _.each and _.conj */
+
+    _.conj = _.bin_multi(_.native_absent("conj", function (x, y) {
+        if (_.isSequence(x))
+            return _.concat(x, y);
+        if (_.isObject(x))
+            return _.merge(x, y);
+        throw "Unrecognized type given to _.conj";
+    }));
+
+
     /* Sequence (Array, String, arguments, ...) */
 
-    _.slice = _.optarg(1, function (arr, args) {
-        if (_.isFunction(arr.slice)) return arr.slice.apply(arr, args);
-        return Array.prototype.slice.apply(arr, args);
+    _.isSequence = function (x) {
+        return _.isNumber(x.length);
+    };
+
+    _.slice = _.native_absent("slice", function (arr, start, end) {
+        var xs = _.toArray(arr);
+        return xs.slice(start, end);
     });
 
-    _.concat = _.bin_multi(function (xs, ys) {
-        if (_.isFunction(xs.concat)) return xs.concat(ys);
-        return Array.prototype.concat.apply(xs, ys);
-    });
+    _.concat = _.bin_multi(_.native_absent("concat", _.optarg(1, function (xs, ys) {
+        var arr = _.toArray(xs);
+        return arr.concat.apply(arr, ys);
+    })));
+
 
     //DEPRECATED
     _.len = _.size;
 
-    _.join = function (a,b) {
-        return a.join(b);
-    };
+    _.join = _.native_absent("join", function (a,b) {
+        return _.toArray(a).join(b);
+    });
+
+
+    /* Array */
 
     _.splat = function (xs, n) {
         var ys = [],

@@ -5,6 +5,27 @@ Underscore-fix
 
 Underscoreに足りない関数を全部乗せ。
 
+Collection
+----------
+
+### _.conj
+
+```
+{} * {} * ... -> {}
+[] * [] * ... -> []
+[] * a  * ... -> []
+"" * "" * ... -> ""
+```
+
+それぞれのデータ型にふさわしい合成を行う.
+
+```javascript
+_.conj({a:1, b:2}, {b:3, c:4}, {d:5}); //=> {a:1, b:3, c:4, d:5} //mergeと同じ
+_.conj([1,2,3], [4,5]);                //=> [1,2,3,4,5]          //concatと同じ
+_.conj([1,2,3], 4, 5);                 //=> [1,2,3,4,5]          //concatと同じ
+_.conj("hel", "lo", "!");              //=> "hello!"             //concatと同じ
+```
+
 Sequence
 --------
 
@@ -252,6 +273,22 @@ var add = _.bin_multi(function (a) { return a + b; });
 
 add(1,2,3,4,5,6,7,8,9); //=> 45
 ```
+
+### _.native_absent ###
+
+```
+String * Function -> Function
+```
+
+メソッド名Mと関数Fを取って、「オブジェクトOと引数Aを取って、オブジェクトOにメソッドMが定義されていれば引数Aにそれを適用し、そうでなければ関数FにオブジェクトOと引数Aを渡す関数」を返す.
+
+```javascript
+var slice = _.native_absent("slice", function (o, start, end) {
+  var arr = _.toArray(o);
+  return arr.slice(start, end);
+});
+```
+
 
 String
 ------

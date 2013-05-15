@@ -1,19 +1,51 @@
 var de = deepEqual,
     se = strictEqual;
 
+/* collection  */
+module("collection");
+
+test("conj", function () {
+    de(_.conj([1,2,3], 4, 5), [1,2,3,4,5], "array -> array");
+    de(_.conj([1,2,3], [4, 5]), [1,2,3,4,5], "array -> array");
+    de(_.conj("hello", ", ", "world"), "hello, world", "string -> string");
+    (function () {
+        de(_.conj(arguments, 4, 5), [1,2,3,4,5], "arguments -> array");
+    })(1,2,3);
+    de(_.conj({a:1, b:2}, {c:3, d:4}), {a:1, b:2, c:3, d:4}, "object -> object");
+});
+
+
 /* sequence */
 module("Sequence");
+
+test("isSequence", function () {
+    se(_.isSequence([1,2,3]), true, "array is sequence");
+    se(_.isSequence("hello"), true, "string is sequence");
+    (function () {
+        se(_.isSequence(arguments), true, "arguments is sequence");
+    })(1,2,3);
+    se(_.isSequence({1:"a", 2:"b"}), false, "object isnt sequence");
+    se(_.isSequence({length: 0}), true, "object with `length` defined is sequence");
+});
 
 test("slice", function () {
     de(_.slice([1,2,3,4,5], 0, 2), [1,2], "array lower upper");
     de(_.slice([1,2,3,4,5], 2), [3,4,5], "array lower");
     se(_.slice("abcde", 2), "cde", "string lower");
+    (function () {
+        de(_.slice(arguments, 1), [2,3], "arguments lower");
+    })(1,2,3);
 });
 
 test("concat", function () {
     de(_.concat([1,2,3], 4, 5), [1,2,3,4,5], "array atom");
-    de(_.concat([1,2,3], [4], 5), [1,2,3,4,5], "array array");
+    de(_.concat([1,2,3], [4, 5]), [1,2,3,4,5], "array array");
+    de(_.concat([1,2,3], [4], 5), [1,2,3,4,5], "array array atom");
     se(_.concat("aaa", "bbb"), "aaabbb", "string string");
+    (function () {
+        de(_.concat(arguments, 4, 5), [1,2,3,4,5], "arguments atom");
+        de(_.concat(arguments, [4, 5]), [1,2,3,4,5], "arguments array");
+    })(1,2,3);
 });
 
 test("len", function () {
@@ -21,12 +53,13 @@ test("len", function () {
     se(_.len("abc"), 3, "string");
 });
 
-/* Array  */
-module("Array");
-
 test("join", function () {
     se(_.join(["foo", "bar", "baz"], "**"), "foo**bar**baz", "ok");
 });
+
+
+/* Array  */
+module("Array");
 
 test("splat", function () {
     de(_.splat([1,2,3,4,5,6], 2), [[1,2], [3,4], [5,6]], "splat by two");

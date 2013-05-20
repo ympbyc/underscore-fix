@@ -166,31 +166,31 @@
 
     /* Operators */
 
-    _["+"] = _.bin_multi(function (a, b) {
+    _["+"] = _.auto_partial(2, function (a, b) {
         return a + b;
     });
 
-    _["-"] = _.bin_multi(function (a, b) {
+    _["-"] = _.auto_partial(2, function (a, b) {
         return a - b;
     });
 
-    _["*"] = _.bin_multi(function (a, b) {
+    _["*"] = _.auto_partial(2, function (a, b) {
         return a * b;
     });
 
-    _["/"] = _.bin_multi(function (a, b) {
+    _["/"] = _.auto_partial(2, function (a, b) {
         return a / b;
     });
 
-    _["%"] = _.bin_multi(function (a, b) {
+    _["%"] = _.auto_partial(2, function (a, b) {
         return a % b;
     });
 
-    _.and = _.bin_multi(function (a, b) {
+    _.and = _.auto_partial(2, function (a, b) {
         return a && b;
     });
 
-    _.or = _.bin_multi(function (a, b) {
+    _.or = _.auto_partial(2, function (a, b) {
         return a || b;
     });
 
@@ -222,7 +222,7 @@
         return a >= b;
     });
 
-    _.at = _.bin_multi(function (a, b) {
+    _.at = _.auto_partial(2, function (a, b) {
         return a[b];
     });
 

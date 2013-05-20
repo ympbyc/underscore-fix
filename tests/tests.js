@@ -217,9 +217,11 @@ test("fn", function () {
 module("Operator");
 
 test("operator", function () {
-    se(_["+"](1,2,3,4,5), 15, "should accept many args");
+    notEqual(_["+"](1,2,3,4,5), 15, "should not accept many args");
+
+    de(_.map([1,2,3,4], _['+'](2)), [3,4,5,6], "multiarg function with map might fail...");
 
     de(_.filter([1,2,0,4,1,3,1], _.neq(1)), [2,0,4,3], "Should automatically partialy apply");
 
-    se(_.at({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
+    se(_.bin_multi(_.at)({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
 });

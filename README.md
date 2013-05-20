@@ -233,15 +233,18 @@ _.pipe("hello, ",
 ### _.iff ###
 
 ```
-Boolean * (() -> a) * (() -> a) -> a
+(a -> Boolean) * (a -> b) * (a -> b) -> (a -> b)
 ```
 
-ifの関数版
+ifの関数版. 述語関数1つと関数2つをとり、関数を返す。
 
 ```javascript
-_.iff(1 < 5,
-      _.partial(_.identity, "yes"),
-      _.partial(_.identity, "no")); //=> "yes"
+f = _.iff(_.partial(_.eq, 5),
+          _.partial(_['*'], 2)
+          _.partial(_.identity, -1));
+
+f(8); //=> -1
+f(5); //=> 10
 ```
 
 ### _.optarg ###
@@ -289,6 +292,21 @@ var slice = _.native_absent("slice", function (o, start, end) {
 });
 ```
 
+### _.auto_partial
+
+```
+Number * Function -> Function
+```
+
+引数の数が数値Nより少なかったら関数Fに部分適用する。
+
+```javascript
+_.eq = _.auto_partial(2, function (a, b) {
+  return a === b;
+});
+_.reject([1,5,2,5,3,5], _.eq(5)); //=> [1,2,3]
+```
+
 
 String
 ------
@@ -327,7 +345,7 @@ toUpper("hello"); //=> "HELLO"
 Operator
 --------
 
-演算子は関数合成や部分適用のときに扱い辛いので関数を提供する. `a * a -> a`なもの(例えば四則演算`Number * Number -> Number`)に関しては全て多引数化してある.
+演算子は関数合成や部分適用のときに扱い辛いので関数を提供する. 全て勝手に部分適用される。`a * a -> a`なもの(例えば四則演算`Number * Number -> Number`)に関しては全て多引数化してある.
 
 用意されている関数:
 

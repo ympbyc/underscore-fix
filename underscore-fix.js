@@ -6,6 +6,7 @@
 
 (function (_) {
 
+    /* Make a function that receives optional arguments as an array */
     _.optarg = function (n, f) {
         return function (/* & arguments  */) {
             var required = Array.prototype.slice.call(arguments, 0, n);
@@ -15,20 +16,32 @@
         };
     };
 
+    /* Turn a binary function into multi argument function */
     _.bin_multi = function (binary_f) {
-        return _.optarg(2, function (x, y, zs) {
+        return _.auto_partial(2, _.optarg(2, function (x, y, zs) {
             return _.foldl(zs, function (acc, a) {
                 return binary_f(acc, a);
             }, binary_f(x, y));
-        });
+        }));
     };
 
+    /* Return a function that calls an alternative function if the method is not defined on the object */
     _.native_absent = function (method, f) {
         return _.optarg(1, function (obj, args) {
             if (_.isFunction(obj[method]))
                 return _.apply(obj[method], args, obj);
             return _.apply(_.partial(f, obj), args);
         });
+    };
+
+    /* Return a partiali-applicable function */
+    _.auto_partial = function (n, f) {
+        var aux = function () {
+            if (arguments.length < n)
+                return _.apply(_.partial, _.concat([aux], _.toArray(arguments)));
+            return _.apply(f, _.toArray(arguments));
+        };
+        return aux;
     };
 
     /* Collection */
@@ -125,9 +138,12 @@
         return _.apply(_.pipe, _.concat([fn(val)], fns));
     });
 
-    _.iff = function (cond, th, el) {
-        if (cond) return th();
-        return el();
+    _.iff = function (pred, th, el) {
+        return function (x) {
+            if (pred(x)) return th(x);
+            if (el) return el(x);
+            return undefined;
+        };
     };
 
     /* String */
@@ -182,29 +198,29 @@
         return ! a;
     };
 
-    _.eq = function (a, b) {
+    _.eq = _.auto_partial(2, function (a, b) {
         return a === b;
-    };
+    });
 
-    _.neq = function (a, b) {
+    _.neq = _.auto_partial(2, function (a, b) {
         return a !== b;
-    };
+    });
 
-    _.lt = function (a, b) {
+    _.lt = _.auto_partial(2, function (a, b) {
         return a < b;
-    };
+    });
 
-    _.gt = function (a, b) {
+    _.gt = _.auto_partial(2, function (a, b) {
         return a > b;
-    };
+    });
 
-    _.lte = function (a, b) {
+    _.lte = _.auto_partial(2, function (a, b) {
         return a <= b;
-    };
+    });
 
-    _.gte = function (a, b) {
+    _.gte = _.auto_partial(2, function (a, b) {
         return a >= b;
-    };
+    });
 
     _.at = _.bin_multi(function (a, b) {
         return a[b];

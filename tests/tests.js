@@ -148,17 +148,16 @@ test("flippar", function () {
 
 test("pipe", function () {
  se(_.pipe(2,
-           _.partial(_["+"], 3),
-           _.partial(_["*"], 4)), 20, "tripple");
+           _["+"](3),
+           _["*"](4)), 20, "tripple");
 });
 
 test("iff", function () {
-    se(_.iff(true,
-             _.partial(_.identity, "yes"),
-             _.partial(_.identity, "no")), "yes", "true branch");
-    se(_.iff(false,
-             _.partial(_.identity, "yes"),
-             _.partial(_.identity, "no")), "no", "false branch");
+    var f = _.iff(_.lt(2), _.identity, function () { return "noo"; });
+    se(f(5), 5, "Should select true branch");
+    se(f(5), 5, "Branch should receive the argument");
+    se(f(1), "noo", "Should select false branch");
+    se(_.iff(_.eq(5), _['*'](2))(5), 10, "Should work without false branch");
 });
 
 test("optarg", function () {
@@ -187,6 +186,15 @@ test("bin_multi", function () {
        7, "should accept many args in order");
 });
 
+test("auto_partial", function () {
+    var eq = _.auto_partial(2, function (a, b) {
+        return a == b;
+    });
+    se(_.eq(2,2), true, "full application should work");
+    se(_.eq(2)(2), true, "should be partialy applied");
+    se(_.eq(2)(5), false, "just checking");
+});
+
 /* String  */
 module("String");
 
@@ -211,7 +219,7 @@ module("Operator");
 test("operator", function () {
     se(_["+"](1,2,3,4,5), 15, "should accept many args");
 
-    de(_.filter([1,2,0,4,1,3,1], _.partial(_.neq, 1)), [2,0,4,3], "should work beautifully when combined with higher order functions");
+    de(_.filter([1,2,0,4,1,3,1], _.neq(1)), [2,0,4,3], "Should automatically partialy apply");
 
     se(_.at({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
 });

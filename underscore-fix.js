@@ -44,6 +44,14 @@
         return aux;
     };
 
+    /* Convenient way to create a functional module */
+    _.module = _.optarg(1, function module (m, fns) {
+        _.each(fns, function (f) {
+            m[f.name] = f;
+        });
+        return m;
+    });
+
     /* Collection */
     /* Collection is what implements _.each and _.conj */
 

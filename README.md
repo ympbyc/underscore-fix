@@ -366,6 +366,41 @@ _.bin_multi(_.at)({a: {b: {c: "xxx"}}}, "a", "b", "c"); //=> "xxx"
 ```
 
 
+Module
+------
+
+```
+{} * Function -> {}
+{} * Function * Function -> {}
+...
+```
+
+モジュールを作る
+
+```javascript
+var myModule = _.module(
+  {},
+
+  function hola () {
+    return "Hola!"
+  },
+
+  function hi () {
+    return "Hi!"
+  }
+);
+
+myModule.hola(); //=> "Hola!"
+
+module(
+  myModule,
+
+  function hehe () { return "hehe";  }
+);
+
+myModule.hehe();
+```
+
 
 LOG
 ---

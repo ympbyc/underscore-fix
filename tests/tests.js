@@ -225,3 +225,25 @@ test("operator", function () {
 
     se(_.bin_multi(_.at)({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
 });
+
+
+
+/* Module */
+module("module")
+
+test("module", function () {
+    var m = _.module(
+        {},
+
+        function myFun1 (a) {
+            return a * 2;
+        },
+
+        function myFun2 () {
+            return "Hola!";
+        }
+    );
+
+    se(m.myFun1(5), 10, "okay");
+    se(m.myFun2(), "Hola!", "Hola!");
+});

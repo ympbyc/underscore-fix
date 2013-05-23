@@ -34,10 +34,11 @@ if (typeof CLOS === "undefined") throw "JS-CLOS is missing";
     CLOS.define_method(bind, [Just, "function"], function (j, f) {
         return f(j._monad_val);
     });
+    _.Maybe.bind = bind;
 
-    _.Maybe.bind = _.optarg(1, function (m, fns) {
+    _.domonad = _.optarg(2, function (module, m, fns) {
         return _.foldl(fns, function (m, f) {
-            return bind(m, f);
+            return module.bind(m, f);
         }, m);
     });
 

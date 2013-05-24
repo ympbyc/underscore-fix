@@ -34,9 +34,6 @@ if (typeof CLOS === "undefined") throw "JS-CLOS is missing";
     CLOS.define_method(bind, [null, "function"], function (n, f) {
         return n;
     });
-    CLOS.define_method(bind, [undefined, "function"], function (n, f) {
-        return n;
-    });
     CLOS.define_method(bind, [Just, "function"], function (j, f) {
         return f(j._monad_val);
     });

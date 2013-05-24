@@ -27,17 +27,22 @@ if (typeof CLOS === "undefined") throw "JS-CLOS is missing";
             return _.Maybe.just(x);
         }
     );
-    var bind = CLOS.define_generic();;
-    CLOS.define_method(bind, [Nothing, "function"], function (n, f) {
+    _.Maybe.bind = CLOS.define_generic();;
+    CLOS.define_method(_.Maybe.bind, [Nothing, "function"], function (n, f) {
         return n;
     });
-    CLOS.define_method(bind, [null, "function"], function (n, f) {
+    CLOS.define_method(_.Maybe.bind, [null, "function"], function (n, f) {
         return n;
     });
-    CLOS.define_method(bind, [Just, "function"], function (j, f) {
+    CLOS.define_method(_.Maybe.bind, [Just, "function"], function (j, f) {
         return f(j._monad_val);
     });
-    _.Maybe.bind = bind;
+    _.Maybe.isNothing = CLOS.define_generic();
+    CLOS.define_method(_.Maybe.isNothing, [Nothing], function () { return true; });
+    CLOS.define_method(_.Maybe.isNothing, [null], function () { return true; });
+    CLOS.define_method(_.Maybe.isNothing, [undefined], function () { return false; });
+    _.Maybe.val = CLOS.define_generic();
+    CLOS.define_method(_.Maybe.val, [Just], function (j) { return j._monad_val; });
 
     _.domonad = _.optarg(2, function (module, m, fns) {
         return _.foldl(fns, function (m, f) {

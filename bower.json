@@ -1,0 +1,13 @@
+{
+  "name": "underscore-fix",
+  "version": "0.1.0",
+  "main": "underscore-fix.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "underscore": "~1.4.4"
+  }
+}

@@ -195,6 +195,12 @@ test("auto_partial", function () {
     se(_.eq(2)(5), false, "just checking");
 });
 
+test("funname", function () {
+    se(_.funname(function hello () {}), "hello", "funname retrieves the name of a given function");
+    se(_.funname(function () {}), "", "anonimous function sould result in empty string");
+    se(_.funname("function    foo    () {}"), "foo", "should trim the name");
+});
+
 /* String  */
 module("String");
 

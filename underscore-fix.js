@@ -47,7 +47,7 @@
     /* Convenient way to create a functional module */
     _.module = _.optarg(1, function module (m, fns) {
         _.each(fns, function (f) {
-            m[f.name] = f;
+            m[_.funname(f)] = f;
         });
         return m;
     });
@@ -152,6 +152,12 @@
             if (el) return el(x);
             return undefined;
         };
+    };
+
+    _.funname = function (f) {
+        if ( ! _.isUndefined(f.name)) return f.name;
+        var results = (/function\s([^(]{1,})\(/).exec(f.toString());
+        return (results && results.length > 1) ? results[1].trim() : "";
     };
 
     /* String */

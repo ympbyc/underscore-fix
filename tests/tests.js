@@ -179,6 +179,10 @@ test("optarg", function () {
         })};
 
     o.f(1,2,3);
+
+    _.optarg(function (a, b, rest) {
+        de(rest, [3,4,5], "Take Function#length when called with one argument");
+    })(1,2,3,4,5);
 });
 
 test("bin_multi", function () {

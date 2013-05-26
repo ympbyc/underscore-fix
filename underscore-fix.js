@@ -8,6 +8,10 @@
 
     /* Make a function that receives optional arguments as an array */
     _.optarg = function (n, f) {
+        if (_.isFunction(n)) {
+            f = n;
+            n = n.length - 1;
+        }
         return function (/* & arguments  */) {
             var required = Array.prototype.slice.call(arguments, 0, n);
             var optional = Array.prototype.slice.call(arguments, n);

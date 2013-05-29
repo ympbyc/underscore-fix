@@ -14,6 +14,10 @@ test("conj", function () {
     de(_.conj({a:1, b:2}, {c:3, d:4}), {a:1, b:2, c:3, d:4}, "object -> object");
 });
 
+test("just_map", function () {
+    de(_.just_map([{a:1}, {b:2}], _.flippar(_.conj, {x: 8})), [{a:1, x:8}, {b:2, x:8}], "this is useful when mapping a multi-arg functions");
+});
+
 
 /* sequence */
 module("Sequence");

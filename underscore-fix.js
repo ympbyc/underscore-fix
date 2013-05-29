@@ -67,6 +67,13 @@
         throw "Unrecognized type given to _.conj";
     }));
 
+    //map with no extra arguments
+    _.just_map = function (coll, f) {
+        return _.map(coll, function (x) {
+            return f(x);
+        });
+    };
+
 
     /* Sequence (Array, String, arguments, ...) */
 

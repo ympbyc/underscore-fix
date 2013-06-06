@@ -238,6 +238,8 @@ test("operator", function () {
     de(_.filter([1,2,0,4,1,3,1], _.neq(1)), [2,0,4,3], "Should automatically partialy apply");
 
     se(_.bin_multi(_.at)({a:{b:{c:3}}}, "a", "b", "c"), 3, "should dive deep");
+
+    se(_.at(_.at({b: 1}, 'a'), 'x'), null, '_.at(null) results in null');
 });
 
 

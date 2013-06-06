@@ -248,6 +248,7 @@
     });
 
     _.at = _.auto_partial(2, function (a, b) {
+        if (_.isNull(a) || _.isUndefined(a)) return null;
         return a[b];
     });
 

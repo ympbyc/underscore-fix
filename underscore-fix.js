@@ -74,6 +74,14 @@
         });
     };
 
+    //map + find + merge
+    _.update_many = function (coll, f, patch, g) {
+        return _.map(coll, function (x) {
+            if (f(x)) return (g || _.conj)(x, patch);
+            return x;
+        });
+    };
+
 
     /* Sequence (Array, String, arguments, ...) */
 

@@ -18,6 +18,18 @@ test("just_map", function () {
     de(_.just_map([{a:1}, {b:2}], _.flippar(_.conj, {x: 8})), [{a:1, x:8}, {b:2, x:8}], "this is useful when mapping a multi-arg functions");
 });
 
+test("update_many", function () {
+    de(_.update_many([{a:1}, {a:4}, {a:2}], function(x) {return x.a < 3;}, {b:100}),
+      [{a:1, b:100}, {a:4}, {a:2, b:100}],
+      "merge is applied to objects");
+    de(_.update_many([[1],[],[],[1]], _.partial(_.isEmpty), 1),
+      [[1],[1],[1],[1]],
+      "concat on arrays");
+    de(_.update_many([1,2,3,4], _.eq(2), 7, function (x, y) {return y}),
+       [1,7,3,4],
+       "accepts a function for custom behaviour");
+});
+
 
 /* sequence */
 module("Sequence");
@@ -245,7 +257,7 @@ test("operator", function () {
 
 
 /* Module */
-module("module")
+module("module");
 
 test("module", function () {
     var m = _.module(

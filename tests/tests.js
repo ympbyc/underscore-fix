@@ -90,6 +90,9 @@ test("merge", function () {
                {c:"a", d:"b", e:"f"},
                {e: 8}),
        {a:1, b:2, c:"a", d:"b", e:8}, "later should replace former");
+
+    de(_.merge([1, 2, 3], {1: 9}, {2: 4}),
+      [1, 9, 4], "should work with arrays");
 });
 
 test("mapmap", function () {
@@ -105,6 +108,7 @@ test("json", function () {
 
 test("assoc", function () {
     de(_.assoc({a: 1, b:2}, "c", 3, "d", 4), {a:1, b:2, c:3, d:4}, "associate");
+    de(_.assoc([1,2,3,4], 1, 7, 4, 8), [1,7,3,4,8], "should work on arrays");
 });
 
 /* Function */

@@ -121,9 +121,11 @@
     /* Object */
 
     _.merge = _.bin_multi(function (a, b) {
-        var x = {};
-        _.extend(x, a);
-        _.extend(x, b);
+        var x = _.reduce(b, function (acc, v, k) {
+            acc[k] = v;
+            return acc;
+        }, _.clone(a));
+
         return x;
     });
 

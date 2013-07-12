@@ -82,7 +82,6 @@
         });
     };
 
-
     /* Sequence (Array, String, arguments, ...) */
 
     _.isSequence = function (x) {
@@ -106,6 +105,13 @@
     _.join = _.native_absent("join", function (a,b) {
         return _.toArray(a).join(b);
     });
+
+
+    //map + flatten
+    _.flat_map = _.flatMap = function (coll, f) {
+        return _.flatten(_.map(coll, f));
+    };
+
 
 
     /* Array */
@@ -166,6 +172,13 @@
         if (_.isEmpty(fns)) return fn(val);
         return _.apply(_.pipe, _.concat([fn(val)], fns));
     });
+
+
+    _.domonad = _.optarg(function (m, mv, fns) {
+        if (_.size(fns) < 1) return mv;
+        return _.apply(_.domonad, _.concat([m, m.bind(mv, _.first(fns))], _.rest(fns)));
+    });
+
 
     _.iff = function (pred, th, el) {
         return function (x) {

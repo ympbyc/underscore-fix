@@ -74,6 +74,12 @@ test("join", function () {
 });
 
 
+test("flat_map", function () {
+    de(_.flat_map([1,2,3,4], function (x) { return [x, x+1]; }),
+      [1,2,2,3,3,4,4,5]);
+});
+
+
 /* Array  */
 module("Array");
 
@@ -224,6 +230,47 @@ test("funname", function () {
     se(_.funname(function () {}), "", "anonimous function sould result in empty string");
     se(_.funname("function    foo    () {}"), "foo", "should trim the name");
 });
+
+
+test("domonad", function () {
+    var listM = {
+        bind:   _.flatMap,
+        return: function (x) { return [x]; }
+    };
+
+    var xs = _.domonad(listM, [1,2,3],
+                     function (x) { return [x, x * 2, x * 3]; },
+                     function (x) { return listM.return(x + "!"); }
+                    );
+
+    de(xs, ["1!","2!","3!","2!","4!","6!","3!","6!","9!"]);
+
+
+
+    var maybeM = {
+        return: _.identity,
+        bind: function (m, f) {
+            if (_.isNull(m) || _.isUndefined(m))
+                return null;
+            return f(m);
+        }
+    };
+
+    var maybeSucces = _.domonad(maybeM, {a: {b: {c: 3}}},
+                                _.flippar(_.at, "a"),
+                                _.flippar(_.at, "b"),
+                                _.flippar(_.at, "c"));
+
+    var maybeFail = _.domonad(maybeM, {a: {b: {c: 3}}},
+                              _.flippar(_.at, "a"),
+                              _.flippar(_.at, "nonexistentkey"),
+                              _.flippar(_.at, "c"));
+
+    se(maybeSucces, 3, "Succeeds iff every function returns a useful value");
+    se(maybeFail, null, "Fails silently (No exception gets thrown).");
+});
+
+
 
 /* String  */
 module("String");

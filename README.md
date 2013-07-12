@@ -26,6 +26,38 @@ _.conj([1,2,3], 4, 5);                 //=> [1,2,3,4,5]          //concatと同�
 _.conj("hel", "lo", "!");              //=> "hello!"             //concatと同じ
 ```
 
+
+### _.just_map
+
+```
+{a} * (a -> b) -> [b]
+[a] * (a -> b) -> [b]
+```
+
+ただのmap。keyを渡さない.
+
+```javascript
+_.just_map([1,2,3], _[+](2)); //=> [3,4,5]
+```
+
+### _.update_many
+
+```
+[a] * (a -> Boolean) * {} -> {}
+[a] * (a -> Boolean) * {} * ({} * {} -> {}) -> {}
+```
+
+mapしてfindしてmerge
+
+```
+_.update_many([{a:1}, {a:4}, {a:2}], function(x) {return x.a < 3;}, {b:100});
+//=> [{a:1, b:100}, {a:4}, {a:2, b:100}]
+```
+
+###
+
+
+
 Sequence
 --------
 
@@ -305,6 +337,58 @@ _.eq = _.auto_partial(2, function (a, b) {
   return a === b;
 });
 _.reject([1,5,2,5,3,5], _.eq(5)); //=> [1,2,3]
+```
+
+### _.funname
+
+```
+Function -> String
+```
+
+関数の名前(name)を返す
+
+### _.domonad
+
+```
+type Monad = {bind:   Monad a * (a -> Monad b) -> Monad b,
+              return: a -> Monad a}
+_.domonad :: Monad * Monad a * (a -> Monad b) -> Monad b
+          :: Monad * Monad a * (a -> Monad b) -> (b -> Monad c) -> Monad c
+          :: ...
+```
+
+returnとbindを使って面白い事をする
+
+```javascript
+var listM = {
+    bind:   _.flatMap,
+    return: function (x) { return [x]; }
+};
+
+_.domonad(listM, [1,2,3],
+        function (x) { return [x, x * 2, x * 3]; },
+        function (x) { return listM.return(x + "!"); }
+); //=> ["1!","2!","3!","2!","4!","6!","3!","6!","9!"]
+
+
+var maybeM = {
+    return: _.identity,
+    bind: function (m, f) {
+        if (_.isNull(m) || _.isUndefined(m))
+            return null;
+        return f(m);
+    }
+};
+
+_.domonad(maybeM, {a: {b: {c: 3}}},
+        _.flippar(_.at, "a"),
+        _.flippar(_.at, "b"),
+        _.flippar(_.at, "c")); //=> 3
+
+_.domonad(maybeM, {a: {b: {c: 3}}},
+        _.flippar(_.at, "a"),
+        _.flippar(_.at, "nonexistentkey"),
+        _.flippar(_.at, "c")); //=> null
 ```
 
 

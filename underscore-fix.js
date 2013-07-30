@@ -175,7 +175,7 @@
 
 
     _.domonad = _.optarg(function (m, mv, fns) {
-        if (_.size(fns) < 1) return mv;
+        if (_.size(fns) < 1) return m.return(mv);
         return _.apply(_.domonad, _.concat([m, m.bind(mv, _.first(fns))], _.rest(fns)));
     });
 

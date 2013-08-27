@@ -6,6 +6,76 @@
 
 (function (_) {
 
+    // trim() for IE8
+    // via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+    if(!String.prototype.trim) {
+      String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g,'');
+      };
+    }
+
+    // bind() for IE8
+    // via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+          // closest thing possible to the ECMAScript 5 internal IsCallable function
+          throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
+
+        var aArgs = Array.prototype.slice.call(arguments, 1), 
+            fToBind = this, 
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(this instanceof fNOP && oThis
+                                     ? this
+                                     : oThis,
+                                   aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+
+        return fBound;
+      };
+    }
+
+    // map() for IE8
+    // via https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+    if (!Array.prototype.map) {
+      Array.prototype.map = function(callback, thisArg) {
+
+        var T, A, k;
+        if (this == null) {
+          throw new TypeError(" this is null or not defined");
+        }
+        var O = Object(this);
+        var len = O.length >>> 0;
+
+        if (typeof callback !== "function") {
+          throw new TypeError(callback + " is not a function");
+        }
+
+        if (thisArg) {
+          T = thisArg;
+        }
+
+        A = new Array(len);
+        k = 0;
+
+        while(k < len) {
+          var kValue, mappedValue;
+          if (k in O) {
+            kValue = O[ k ];
+            mappedValue = callback.call(T, kValue, k, O);
+            A[ k ] = mappedValue;
+          }
+          k++;
+        }
+        return A;
+      };
+    }
+
     /* Make a function that receives optional arguments as an array */
     _.optarg = function (n, f) {
         if (_.isFunction(n)) {

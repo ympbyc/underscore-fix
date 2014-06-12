@@ -213,6 +213,11 @@ if(!String.prototype.trim) {
 
     /* Methods  */
 
+    //[{foo:function(){return 1}}].map(_.callMethod("foo"))
+    _.callMethod = _.optarg(function (method, args) {
+        return function (x) { return x[method].apply(x, args); };
+    });
+
     //turn a method into a function
     _.fn = function (proto, method) {
         return _.optarg(1, function (rec, args) {

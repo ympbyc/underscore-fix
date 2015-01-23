@@ -15,8 +15,10 @@ if(!String.prototype.trim) {
 
 (function (_) {
 
+    var __ = {};
+
     /* Make a function that receives optional arguments as an array */
-    _.optarg = function (n, f) {
+    __.optarg = function (n, f) {
         if (_.isFunction(n)) {
             f = n;
             n = n.length - 1;
@@ -30,8 +32,8 @@ if(!String.prototype.trim) {
     };
 
     /* Turn a binary function into multi argument function */
-    _.bin_multi = function (binary_f) {
-        return _.auto_partial(2, _.optarg(2, function (x, y, zs) {
+    __.bin_multi = function (binary_f) {
+        return __.auto_partial(2, __.optarg(2, function (x, y, zs) {
             return _.foldl(zs, function (acc, a) {
                 return binary_f(acc, a);
             }, binary_f(x, y));
@@ -39,8 +41,8 @@ if(!String.prototype.trim) {
     };
 
     /* Return a function that calls an alternative function if the method is not defined on the object */
-    _.native_absent = function (method, f) {
-        return _.optarg(1, function (obj, args) {
+    __.native_absent = function (method, f) {
+        return __.optarg(1, function (obj, args) {
             if (_.isFunction(obj[method]))
                 return _.apply(obj[method], args, obj);
             return _.apply(_.partial(f, obj), args);
@@ -48,7 +50,7 @@ if(!String.prototype.trim) {
     };
 
     /* Return a partiali-applicable function */
-    _.auto_partial = function (n, f) {
+    __.auto_partial = function (n, f) {
         var aux = function () {
             if (arguments.length < n)
                 return _.apply(_.partial, _.concat([aux], _.toArray(arguments)));
@@ -58,7 +60,7 @@ if(!String.prototype.trim) {
     };
 
     /* Convenient way to create a functional module */
-    _.module = _.optarg(1, function module (m, fns) {
+    __.module = __.optarg(1, function module (m, fns) {
         _.each(fns, function (f) {
             m[_.funname(f)] = f;
         });
@@ -68,7 +70,7 @@ if(!String.prototype.trim) {
     /* Collection */
     /* Collection is what implements _.each and _.conj */
 
-    _.conj = _.bin_multi(_.native_absent("conj", function (x, y) {
+    __.conj = __.bin_multi(__.native_absent("conj", function (x, y) {
         if (_.isSequence(x))
             return _.concat(x, y);
         if (_.isObject(x))
@@ -77,14 +79,14 @@ if(!String.prototype.trim) {
     }));
 
     //map with no extra arguments
-    _.just_map = function (coll, f) {
+    __.just_map = function (coll, f) {
         return _.map(coll, function (x) {
             return f(x);
         });
     };
 
     //map + find + merge
-    _.update_many = function (coll, f, patch, g) {
+    __.update_many = function (coll, f, patch, g) {
         return _.map(coll, function (x) {
             if (f(x)) return (g || _.conj)(x, patch);
             return x;
@@ -93,31 +95,31 @@ if(!String.prototype.trim) {
 
     /* Sequence (Array, String, arguments, ...) */
 
-    _.isSequence = function (x) {
+    __.isSequence = function (x) {
         return _.isNumber(x.length);
     };
 
-    _.slice = _.native_absent("slice", function (arr, start, end) {
+    __.slice = __.native_absent("slice", function (arr, start, end) {
         var xs = _.toArray(arr);
         return xs.slice(start, end);
     });
 
-    _.concat = _.bin_multi(_.native_absent("concat", _.optarg(1, function (xs, ys) {
+    __.concat = __.bin_multi(__.native_absent("concat", __.optarg(1, function (xs, ys) {
         var arr = _.toArray(xs);
         return arr.concat.apply(arr, ys);
     })));
 
 
     //DEPRECATED
-    _.len = _.size;
+    __.len = _.size;
 
-    _.join = _.native_absent("join", function (a,b) {
+    __.join = __.native_absent("join", function (a,b) {
         return _.toArray(a).join(b);
     });
 
 
     //map + flatten
-    _.flat_map = _.flatMap = function (coll, f) {
+    __.flat_map = __.flatMap = function (coll, f) {
         return _.flatten(_.map(coll, f));
     };
 
@@ -125,7 +127,7 @@ if(!String.prototype.trim) {
 
     /* Array */
 
-    _.splat = function (xs, n) {
+    __.splat = function (xs, n) {
         var ys = [],
             i = 0, l = _.size(xs);
         for (; i < l; i += n)
@@ -135,7 +137,7 @@ if(!String.prototype.trim) {
 
     /* Object */
 
-    _.merge = _.bin_multi(function (a, b) {
+    __.merge = __.bin_multi(function (a, b) {
         var x = _.reduce(b, function (acc, v, k) {
             acc[k] = v;
             return acc;
@@ -144,7 +146,7 @@ if(!String.prototype.trim) {
         return x;
     });
 
-    _.mapmap = function (map, f) {
+    __.mapmap = function (map, f) {
         var res = {};
         _.each(map, function (v, k) {
             res[k] = f(v, k);
@@ -152,44 +154,44 @@ if(!String.prototype.trim) {
         return res;
     };
 
-    _.json = function (x) {
+    __.json = function (x) {
         if (_.isString(x)) return JSON.parse(x);
         return JSON.stringify(x);
     };
 
-    _.assoc = _.optarg(1, function (o, kvs) {
+    __.assoc = __.optarg(1, function (o, kvs) {
         return _.merge(o, _.object(_.splat(kvs, 2)));
     });
 
     /* Function */
-    _.apply = function (f, args, context) {
+    __.apply = function (f, args, context) {
         return f.apply(context ? context : null, args);
     };
 
-    _.flip = function (f) {
+    __.flip = function (f) {
         return _.optarg(2, function (x, y, zs) {
             return _.apply(_.partial(f, y, x), zs, this);
         });
     };
 
-    _.flip_partial = _.flippar = _.optarg(1, function (f, args) {
+    __.flip_partial = __.flippar = __.optarg(1, function (f, args) {
         return _.apply(_.partial, _.concat([_.flip(f)], args));
     });
 
 
-    _.pipe = _.optarg(2, function (val, fn, fns) {
+    __.pipe = __.optarg(2, function (val, fn, fns) {
         if (_.isEmpty(fns)) return fn(val);
         return _.apply(_.pipe, _.concat([fn(val)], fns));
     });
 
 
-    _.domonad = _.optarg(function (m, mv, fns) {
+    __.domonad = __.optarg(function (m, mv, fns) {
         if (_.size(fns) < 1) return m.return(mv);
         return _.apply(_.domonad, _.concat([m, m.bind(mv, _.first(fns))], _.rest(fns)));
     });
 
 
-    _.iff = function (pred, th, el) {
+    __.iff = function (pred, th, el) {
         return function (x) {
             if (pred(x)) return th(x);
             if (el) return el(x);
@@ -197,7 +199,7 @@ if(!String.prototype.trim) {
         };
     };
 
-    _.funname = function (f) {
+    __.funname = function (f) {
         if ( ! _.isUndefined(f.name)) return f.name;
         var results = (/function\s([^(]{1,})\(/).exec(f.toString());
         return (results && results.length > 1) ? results[1].trim() : "";
@@ -205,7 +207,7 @@ if(!String.prototype.trim) {
 
     /* String */
     //simple_template :: "" -> {"":""} -> ""
-    _.simple_template = _.simplate = function (tmpl, filler) {
+    __.simple_template = __.simplate = function (tmpl, filler) {
         return _.foldl(filler, function (tmpl, val, key) {
             return tmpl.replace(new RegExp("{{ *"+key+" *}}", "g"), val);
         }, tmpl);
@@ -214,12 +216,12 @@ if(!String.prototype.trim) {
     /* Methods  */
 
     //[{foo:function(){return 1}}].map(_.callMethod("foo"))
-    _.callMethod = _.optarg(function (method, args) {
+    __.callMethod = __.optarg(function (method, args) {
         return function (x) { return x[method].apply(x, args); };
     });
 
     //turn a method into a function
-    _.fn = function (proto, method) {
+    __.fn = function (proto, method) {
         return _.optarg(1, function (rec, args) {
             return proto[method].apply(rec, args);
         });
@@ -228,66 +230,67 @@ if(!String.prototype.trim) {
 
     /* Operators */
 
-    _["+"] = _.auto_partial(2, function (a, b) {
+    __["+"] = __.auto_partial(2, function (a, b) {
         return a + b;
     });
 
-    _["-"] = _.auto_partial(2, function (a, b) {
+    __["-"] = __.auto_partial(2, function (a, b) {
         return a - b;
     });
 
-    _["*"] = _.auto_partial(2, function (a, b) {
+    __["*"] = __.auto_partial(2, function (a, b) {
         return a * b;
     });
 
-    _["/"] = _.auto_partial(2, function (a, b) {
+    __["/"] = __.auto_partial(2, function (a, b) {
         return a / b;
     });
 
-    _["%"] = _.auto_partial(2, function (a, b) {
+    __["%"] = __.auto_partial(2, function (a, b) {
         return a % b;
     });
 
-    _.and = _.auto_partial(2, function (a, b) {
+    __.and = __.auto_partial(2, function (a, b) {
         return a && b;
     });
 
-    _.or = _.auto_partial(2, function (a, b) {
+    __.or = __.auto_partial(2, function (a, b) {
         return a || b;
     });
 
-    _.not = function (a) {
+    __.not = function (a) {
         return ! a;
     };
 
-    _.eq = _.auto_partial(2, function (a, b) {
+    __.eq = __.auto_partial(2, function (a, b) {
         return a === b;
     });
 
-    _.neq = _.auto_partial(2, function (a, b) {
+    __.neq = __.auto_partial(2, function (a, b) {
         return a !== b;
     });
 
-    _.lt = _.auto_partial(2, function (a, b) {
+    __.lt = __.auto_partial(2, function (a, b) {
         return a < b;
     });
 
-    _.gt = _.auto_partial(2, function (a, b) {
+    __.gt = __.auto_partial(2, function (a, b) {
         return a > b;
     });
 
-    _.lte = _.auto_partial(2, function (a, b) {
+    __.lte = __.auto_partial(2, function (a, b) {
         return a <= b;
     });
 
-    _.gte = _.auto_partial(2, function (a, b) {
+    __.gte = __.auto_partial(2, function (a, b) {
         return a >= b;
     });
 
-    _.at = _.auto_partial(2, function (a, b) {
+    __.at = __.auto_partial(2, function (a, b) {
         if (_.isNull(a) || _.isUndefined(a)) return null;
         return a[b];
     });
 
+    _.mixin(__);
 
 }(_));

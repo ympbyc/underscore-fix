@@ -8,6 +8,6 @@
     "components"
   ],
   "dependencies": {
-    "underscore": "~1.4.4"
+    "underscore": "~1.8.3"
   }
 }

@@ -476,7 +476,7 @@ var myModule = _.module(
 
 myModule.hola(); //=> "Hola!"
 
-module(
+_.module(
   myModule,
 
   function hehe () { return "hehe";  }

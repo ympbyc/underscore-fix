@@ -89,7 +89,7 @@ if(!String.prototype.trim) {
     __.zip_map = __.zipMap = _.optarg(1, function (f, colls) {
         var shortest = _.sortBy(colls, _.len)[0];
         return _.map(shortest, function (x, i) {
-            return __.apply(f, _.map(colls, _.at(i));
+            return __.apply(f, _.map(colls, _.at(i)));
         });
     });
 

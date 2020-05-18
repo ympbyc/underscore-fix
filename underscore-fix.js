@@ -86,7 +86,7 @@ if(!String.prototype.trim) {
     };
     
     //map over multiple seqs
-    __.zip_map = __.zipMap = _.optarg(1, function (f, colls) {
+    __.zip_map = __.zipMap = __.optarg(1, function (f, colls) {
         var shortest = _.sortBy(colls, _.len)[0];
         return _.map(shortest, function (x, i) {
             return __.apply(f, _.map(colls, _.at(i)));
@@ -177,7 +177,7 @@ if(!String.prototype.trim) {
     };
 
     __.flip = function (f) {
-        return _.optarg(2, function (x, y, zs) {
+        return __.optarg(2, function (x, y, zs) {
             return _.apply(_.partial(f, y, x), zs, this);
         });
     };
@@ -230,7 +230,7 @@ if(!String.prototype.trim) {
 
     //turn a method into a function
     __.fn = function (proto, method) {
-        return _.optarg(1, function (rec, args) {
+        return __.optarg(1, function (rec, args) {
             return proto[method].apply(rec, args);
         });
     };
